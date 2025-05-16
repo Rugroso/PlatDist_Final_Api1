@@ -6,7 +6,6 @@ const app = express();
 const PORT = 3000;
 
 const db = new Database("concesionaria.db");
-const VENTAS_API_URL = process.env.VENTAS_API_URL || "http://localhost:4000";
 const sqs = new AWS.SQS({ region: process.env.AWS_REGION });
 
 
@@ -35,6 +34,10 @@ if (contarAutos === 0) {
   db.prepare("INSERT INTO autos (modelo, precio) VALUES (?, ?)").run("Mazda 3", 300000);
   db.prepare("INSERT INTO autos (modelo, precio) VALUES (?, ?)").run("Chevrolet Aveo", 220000);
 }
+
+app.get("/", (req, res) => {
+  res.status(200).json({ mensaje: "Bienvenido a la API de la concesionaria" });
+});
 
 app.get("/autos", (req, res) => {
   const autos = db.prepare("SELECT * FROM autos").all();
